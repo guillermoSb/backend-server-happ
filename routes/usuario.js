@@ -7,7 +7,11 @@ var mdAuth = require('../middlewares/auth');
 // Obtener todos los usuarios
 //=============================
 app.get('/', (req, res, next) => {
-    Usuario.find({}, 'id nombre email img role')
+    var desde = req.query.desde || 0;
+    desde = Number(desde);
+    Usuario.find({},'id nombre email img role')
+        .skip(desde)
+        .limit(5)
         .exec(
             (errors, usuarios)=>{
                 if (errors) {
@@ -17,9 +21,12 @@ app.get('/', (req, res, next) => {
                         errors
                     });
                 }
-                return res.status(200).json({
-                    ok: true,
-                    usuarios
+                Usuario.count({}, (err, conteo) => {
+                    return res.status(200).json({
+                        ok: true,
+                        usuarios,
+                        total: conteo
+                    })
                 })
             }
         )

@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
  
+
 // Conexion a la Db
 mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, res) => {
     if(err) {
