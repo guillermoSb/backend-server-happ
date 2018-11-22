@@ -26,14 +26,14 @@ app.post('/', (req, res)=>{
         if(!usuarioDB){
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Credenciales Incorrectas - email',
+                mensaje: 'Credenciales Incorrectas',
                 errors
             })
         }
         if(!bcrypt.compareSync(body.password, usuarioDB.password)){
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Credenciales Incorrectas - password',
+                mensaje: 'Credenciales Incorrectas',
                 errors
             })
         }

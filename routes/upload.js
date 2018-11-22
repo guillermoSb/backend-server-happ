@@ -2,6 +2,7 @@ var express = require('express');
 var fileupload = require('express-fileupload');
 var app = express();
 var fs = require('fs');
+var mdAuth = require('../middlewares/auth');
 
 // Middleware
 app.use(fileupload());
@@ -15,7 +16,7 @@ var Hospital = require('../models/hospital');
 // Upload de imagenes
 //=============================
 
-app.put('/:tipo/:id', (req, res, next) => {
+app.put('/:tipo/:id', mdAuth.verificaToken ,(req, res, next) => {
     var tipo = req.params.tipo;
     var id = req.params.id;
     //tipos de coleccion

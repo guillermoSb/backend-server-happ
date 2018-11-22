@@ -37,14 +37,13 @@ app.get('/', (req, res, next) => {
 // Post de usuarios
 //=============================
 
-app.post('/', mdAuth.verificaToken ,(req, res, next) => {
+app.post('/',(req, res, next) => {
     var body = req.body;
     var usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
-        role: body.role,
-        img: body.img
+        role: body.role
     });
     usuario.save((errors, usuario)=>{
         if(errors) {
