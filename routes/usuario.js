@@ -9,7 +9,7 @@ var mdAuth = require('../middlewares/auth');
 app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
-    Usuario.find({},'id nombre email img role')
+    Usuario.find({},'id nombre email img role google')
         .skip(desde)
         .limit(5)
         .exec(

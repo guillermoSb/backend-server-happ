@@ -33,6 +33,37 @@ app.get('/', (req, res)=>{
        
     })
 })
+
+//=============================
+// Get single medico
+//=============================
+app.get('/:id', (req, res) => {
+    var id = req.params.id;
+    Medico.findById(id)
+        .populate('usuario', 'nombre email img')
+        .populate('hospital')
+        .exec((errors, medico) => {
+            if(errors){
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al cargar el medico.',
+                    errors
+                })
+            }
+            if(!medico) {
+                // no hay medico
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'No existe un medico con ese ID',
+                    errors
+                })
+            }
+            res.status(200).json({
+                ok: true,
+                medico
+            })
+        })
+})
 //=============================
 // Post de medicos
 //=============================

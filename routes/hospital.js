@@ -10,9 +10,7 @@ var Hospital = require('../models/hospital')
 app.get('/' ,(req, res)=>{
     var desde = req.query.desde || 0;
     desde = Number(desde);
-    Hospital.find({}, 'nombre usuario')
-    .skip(desde)
-    .limit(5)
+    Hospital.find({}, 'nombre usuario img')
     .populate('usuario', 'nombre email')
     .exec(
         (errors, hospitales) => {
@@ -34,7 +32,36 @@ app.get('/' ,(req, res)=>{
         }
     )
 })
-
+//=============================
+// Obtener por ID
+//=============================
+app.get('/:id',(req, res) => {
+    var id = req.params.id;
+    Hospital.findById(id)
+    .populate('usuario', 'nombre img email')
+    .exec((err, hospital) => {
+        if(err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar hospital',
+                errors: err
+            });
+        }
+        if(!hospital) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'No existe un hospital con ese id',
+                errors: {
+                    mensaje: 'No se pudo encontrar un hospital con ese id'
+                }
+            });
+        }
+        return res.status(200).json({
+            ok: true,
+            hospital
+        })
+    })
+})
 //=============================
 // Post de hospitales
 //=============================

@@ -14,10 +14,16 @@ app.get('/coleccion/:tabla/:busqueda', (req, res, next) => {
     var busqueda = req.params.busqueda;
     var regex = new RegExp(busqueda, 'i');
     if(tabla === 'hospital') {
-        buscarHospitales(busqueda, regex).then(hospitales => {
+        console.log('TABLA DE HOSPITALES')
+        return buscarHospitales(busqueda, regex).then(hospitales => {
             return res.status(200).json({
                 ok : true,
                 hospitales
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error
             })
         })
     }
@@ -28,12 +34,22 @@ app.get('/coleccion/:tabla/:busqueda', (req, res, next) => {
                 medicos
             })
         })
+        .catch(error => {
+            return res.status(400).json({
+                error
+            })
+        })
     }
     if(tabla === 'usuario') {
         return buscarUsuarios(busqueda, regex).then(usuarios => {
             res.status(200).json({
                 ok : true,
                 usuarios
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error
             })
         })
     }
@@ -77,6 +93,7 @@ function buscarHospitales(busqueda, regex) {
         .populate('usuario', 'nombre email')
         .exec((err, hospitales) => {
             if (err) {
+                console.log(err);
                 reject('Error al cargar hospitales');
             }else{
                 resolve(hospitales);
@@ -102,7 +119,7 @@ function buscarMedicos(busqueda, regex) {
 }
 function buscarUsuarios(busqueda, regex) {
     return new Promise((resolve, reject) => {
-        Usuario.find({}, 'nombre email role')
+        Usuario.find({}, '')
             .or([{'nombre': regex}, {'email': regex}])
             .exec( (err, usuarios) => {
                 if(err) {
